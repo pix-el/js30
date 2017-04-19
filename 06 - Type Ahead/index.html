@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+//step1: fetch the data
+const cities = [];
+fetch(endpoint)
+  .then(response => response.json())
+  .then(data => cities.push(...data));
+
+//step2: write function to filter the data as needed
+
+function findMatches(searchText, cities){
+    return cities.filter((place) => {
+        const regex = new RegExp(searchText, 'gi');
+        return place.city.match(regex) || place.state.match(regex);
+    })
+}
+
+//step3: search text from input, and map results
+const input = document.querySelector('.search');
+const list = document.querySelector('.suggestions');
+
+input.addEventListener('keyup', displayMatches);
+
+function displayMatches(){
+  const matchedPlaces = findMatches(this.value, cities);
+  const html = matchedPlaces.map((m) => {
+    const regex = new RegExp(this.value, 'gi');
+    const highlightedCity = m.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const highlightedState = m.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    const population = Number(m.population).toLocaleString();
+    console.log(population);
+    return `<li>
+      <span class="name">${highlightedCity}, ${highlightedState}</span>
+      <span class="population"> ${population}</span>
+    </li>`;
+  }).join('');
+  list.innerHTML = html;
+}
+
+</script>
+  </body>
+</html>
