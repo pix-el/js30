@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+let pressed = [];
+const secretCode = 'wilkie'
+window.addEventListener('keyup', (e)=>{
+    pressed.push(e.key)
+    pressed.splice(0, pressed.length - secretCode.length)
+    if(pressed.join('') === secretCode){
+      console.log('DING DING DING! THE BELL HAS BEEN RUNG!')
+      cornify_add()
+    }
+    console.log(pressed)
+})
+</script>
+</body>
+</html>
